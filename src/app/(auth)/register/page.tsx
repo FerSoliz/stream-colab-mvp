@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { UserPlus, Mail, Lock, User, Loader2, ArrowRight } from "lucide-react";
 import { AuthService } from "@/service/auth";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -22,9 +23,11 @@ export default function RegisterPage() {
     try {
       await AuthService.register(email, password, name);
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Error al crear la cuenta";
+      toast.error(message);
       setError("Error al crear la cuenta. El correo podría estar en uso.");
-      console.error(err);
+      console.error(error);
     } finally {
       setLoading(false);
     }

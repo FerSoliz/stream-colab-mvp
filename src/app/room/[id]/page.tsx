@@ -8,10 +8,8 @@ import {
   Mic, 
   MicOff, 
   PhoneOff, 
-  MessageCircle, 
   Users, 
   LayoutGrid,
-  Loader2,
   Radio
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";

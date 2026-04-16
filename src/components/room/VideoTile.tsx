@@ -3,8 +3,18 @@
 import React, { useEffect, useRef } from "react";
 import { User, MicOff } from "lucide-react";
 
+interface VideoParticipant {
+  user_name?: string;
+  audio: boolean;
+  video: boolean;
+  tracks: {
+    video?: { persistentTrack?: MediaStreamTrack };
+    audio?: { persistentTrack?: MediaStreamTrack };
+  };
+}
+
 interface VideoTileProps {
-  participant: any;
+  participant: VideoParticipant;
   isLocal?: boolean;
 }
 

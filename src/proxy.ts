@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
  * Next.js 16 Proxy (anteriormente Middleware).
  * Se utiliza para ejecutar lógica antes de que se complete una solicitud.
  */
-export function proxy(request: NextRequest) {
+export function proxy(_request: NextRequest) {
   // Nota: En una app real de Firebase, lo ideal sería verificar una Cookie de Session.
   // Pero para este MVP, usaremos la lógica de cliente en AuthProvider.
   

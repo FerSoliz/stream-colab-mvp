@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import DailyIframe, { DailyCall, DailyEventObject } from "@daily-co/daily-js";
+import DailyIframe, { DailyCall, DailyParticipant } from "@daily-co/daily-js";
 import { useAuth } from "./AuthContext";
 import { toast } from "sonner";
 
@@ -10,7 +10,7 @@ interface DailyContextType {
   joinRoom: (roomName: string) => Promise<void>;
   leaveRoom: () => Promise<void>;
   isJoined: boolean;
-  participants: any[]; // Simplificado para el MVP
+  participants: DailyParticipant[]; // Tipado correctamente para Vercel
 }
 
 const DailyContext = createContext<DailyContextType>({
@@ -25,7 +25,7 @@ export const DailyProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, role } = useAuth();
   const [callObject, setCallObject] = useState<DailyCall | null>(null);
   const [isJoined, setIsJoined] = useState(false);
-  const [participants, setParticipants] = useState<any[]>([]);
+  const [participants, setParticipants] = useState<DailyParticipant[]>([]);
 
   // Inicializar el objeto de llamada una sola vez
   useEffect(() => {
@@ -90,8 +90,9 @@ export const DailyProvider = ({ children }: { children: React.ReactNode }) => {
         token,
       });
 
-    } catch (err: any) {
-      console.error("Error joining Daily room:", err);
+    } catch (error: unknown) {
+      console.error("Error joining Daily room:", error);
+      const err = error as Error;
       
       // Manejar errores comunes de Daily
       if (err.message?.includes("cam-mic")) {

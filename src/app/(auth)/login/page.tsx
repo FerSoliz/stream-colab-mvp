@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LogIn, Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { AuthService } from "@/service/auth";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,9 +22,10 @@ export default function LoginPage() {
     try {
       await AuthService.login(email, password);
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Error al iniciar sesión";
+      toast.error(message);
       setError("Credenciales inválidas. Verifica tu correo y contraseña.");
-      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -21,9 +21,9 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught error:", error, errorInfo);
-    toast.error("Ocurrió un error crítico en la aplicación");
+  public componentDidCatch(error: Error) {
+    console.error("ErrorBoundary caught an error:", error);
+    toast.error("Ocurrió un error inesperado en la interfaz.");
   }
 
   public render() {

@@ -97,9 +97,16 @@ export function ChatRoom({ roomId }: ChatRoomProps) {
     const unsubscribeChat = onValue(messagesRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const msgList = Object.entries(data).map(([id, val]: [string, any]) => ({
+        interface ChatMessage {
+          senderId: string;
+          senderName: string;
+          text: string;
+          timestamp: number;
+          role: string;
+        }
+        const msgList = Object.entries(data).map(([id, val]) => ({
           id,
-          ...val,
+          ...(val as ChatMessage),
         }));
         setMessages(msgList);
       }

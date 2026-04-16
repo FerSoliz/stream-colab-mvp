@@ -72,8 +72,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ token: data.token });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Error interno del servidor";
     console.error("Daily Token Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
