@@ -15,7 +15,40 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ token: "dummy-token-for-dev" });
     }
 
-    // Configurar permisos según el rol (isOwner)
+    // 1. Asegurar que la sala existe en Daily.co
+    const roomCheckResponse = await fetch(`https://api.daily.co/v1/rooms/${roomName}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${DAILY_API_KEY}`,
+      },
+    });
+
+    if (!roomCheckResponse.ok) {
+      console.log(`Sala ${roomName} no encontrada. Creándola...`);
+      const createRoomResponse = await fetch("https://api.daily.co/v1/rooms", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${DAILY_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: roomName,
+          privacy: "public", // Para el MVP usamos salas públicas con acceso controlado por token
+          properties: {
+            enable_chat: true,
+            start_video_off: false,
+            start_audio_off: false,
+          },
+        }),
+      });
+
+      if (!createRoomResponse.ok) {
+        const createError = await createRoomResponse.json();
+        console.error("Error al crear sala:", createError);
+      }
+    }
+
+    // 2. Generar el Token de acceso
     const options = {
       method: "POST",
       headers: {
